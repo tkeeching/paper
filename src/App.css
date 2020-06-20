@@ -3,6 +3,21 @@
   color: goldenrod;
 }
 
+nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  justify-content: center;
+}
+
+nav a:first-of-type {
+  justify-self: end;
+}
+
+nav a:last-of-type {
+  justify-self: start;
+}
+
 .notes-grid-container {
   display: grid;
   justify-items: center;
@@ -39,8 +54,8 @@
 
 .form-wrapper {
   display: grid;
-  margin: 0 auto;
-  margin-bottom: 80px;
+  margin: 30px auto;
+  margin-bottom: 60px;
   width: 40vw;
 }
 
@@ -60,7 +75,6 @@
   border: 1px solid lightgray;
   border-radius: 10px;
   box-shadow: 2px 2px lightgray;
-  /* flex-grow: 0.2; */
 }
 
 .input-wrapper {
@@ -164,7 +178,7 @@
 
 @media only screen and (max-width:900px) {
   .App h1 {
-    margin-left: 20px;
+    margin-left: 30px;
   }
   
   .notes-grid-container {
@@ -177,9 +191,13 @@
     justify-items: center;
   }
 
-  .input-wrapper {
-    width: 100%;
+  .form-wrapper {
+    display: grid;
+    margin: 30px auto;
+    margin-bottom: 60px;
+    width: 80vw;
   }
+
 }
 
 .editor {

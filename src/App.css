@@ -1,38 +1,202 @@
-.App {
-  text-align: center;
+.App h1 {
+  margin-left: 40px;
+  color: goldenrod;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.notes-grid-container {
+  display: grid;
+  justify-items: center;
+  /* margin: 0 auto; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.notes-flex-container {
+  /* display: flex; */
+  /* align-content: space-between; */
+  /* flex-wrap: wrap; */
+  /* flex-direction: row; */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.note-entry {
+  background-color: #fff;
+  width: 250px;
+  /* align-self: flex-start; */
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.note-entry p {
+  white-space: pre-wrap;
+}
+
+.note-entry h3 {
+  margin-top: 0;
+}
+
+.note-entry:hover {
+  box-shadow: 0 1px 1px 1px lightgray;
+  /* animation: running-light 0.6s infinite; */
+}
+
+.note-entry:focus {
+  /* box-shadow: 0 1px 1px 1px gray; */
+  animation: throw 0.8s forwards;
+}
+
+.form-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 100px;
 }
 
-.App-link {
-  color: #61dafb;
+.form-backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.form {
+  position: relative;
+  background-color: #fff;
+  z-index: 1;
+  padding: 10px 10px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  box-shadow: 2px 2px lightgray;
+  flex-grow: 0.1;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
+.input-wrapper input {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border: none;
+}
+
+.input-wrapper textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  resize: none;
+  border: none;
+  /* width: 100%; */
+}
+
+.input-wrapper input:focus, textarea:focus {
+  outline: none;
+}
+
+.input-wrapper input::placeholder, textarea::placeholder {
+  /* opacity: 60%; */
+}
+
+.input-wrapper input:nth-of-type(2) {
+  position: relative;
+  left: 11rem;
+  top: 3rem;
+  background-color: lightgreen;
+  border: 1px solid lightgreen;
+  /* box-shadow: 1px 1px lightseagreen; */
+  border-radius: 20px;
+  font-size: 1.5rem;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+}
+
+.input-wrapper input:nth-of-type(3) {
+  background-color: orange;
+  border: 1px solid orange;
+  box-shadow: 2px 2px orange;
+  margin-top: 20px;
+  font-size: 1rem;
+  width: 50%;
+  display: grid;
+  justify-self: center;
+}
+
+.input-wrapper input:nth-of-type(4) {
+  background-color: red;
+  border: 1px solid red;
+  box-shadow: 2px 2px maroon;
+  margin-top: 20px;
+  font-size: 1rem;
+  width: 50%;
+  display: grid;
+  justify-self: center;
+}
+
+.input-wrapper input:last-of-type:hover {
+  cursor: pointer;
+}
+
+@keyframes running-light {
+  0% {
+    box-shadow: 0 -2px yellow;
   }
-  to {
-    transform: rotate(360deg);
+  20% {
+    box-shadow: 2px 0 red;
   }
+  40% {
+    box-shadow: 0 2px blue;
+  }
+  60% {
+    box-shadow: -2px 0 green;
+  }
+}
+
+@keyframes throw {
+  0% {
+    transform: translate(0, -100px);
+  }
+  40% {
+    transform: translate(50px, -200px);
+  }
+  80% {
+    transform: translate(50px, -400px);
+  }
+  100% {
+    transform: translate(50px, -800px);
+  }
+}
+
+@media only screen and (max-width:900px) {
+  .App h1 {
+    margin-left: 20px;
+  }
+  
+  .notes-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+    width: 90%;
+    margin: 0 auto;
+    justify-items: center;
+  }
+
+  .input-wrapper {
+    width: 100%;
+  }
+}
+
+.editor {
+  position: fixed;
+  left: 48rem;
+  background: gold;
+  border-radius: 20px;
+  height: 200px;
+  width: 400px;
+}
+
+.hidden {
+  display: none;
 }

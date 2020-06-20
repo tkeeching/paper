@@ -52,6 +52,7 @@ class App extends React.Component {
     body: '',
     titleField: "hidden",
     editor: "hidden",
+    textareaRow: 1,
     currentNoteID: '',
     currentUserID: '',
     notes: []
@@ -173,7 +174,8 @@ class App extends React.Component {
     const name = e.target.name;
 
     this.setState({
-      [name]: value
+      [name]: value,
+      textareaRow: 6
     });
   }
 
@@ -190,7 +192,8 @@ class App extends React.Component {
     // if (e.target.id === "textarea") return;
     console.log("hide");
     this.setState({
-      titleField: "hidden"
+      titleField: "hidden",
+      textareaRow: 1
     })
   }
 
@@ -260,7 +263,7 @@ class App extends React.Component {
                     onChange={this.handleInputChange}
                     id="textarea"
                     // cols="30"
-                    rows="6"
+                    rows={this.state.textareaRow}
                     placeholder="Take a note...">
                   </textarea>
                   <input type="submit" value={this.state.currentNoteID ? "Done" : "+"} />

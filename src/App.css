@@ -9,13 +9,6 @@
   /* margin: 0 auto; */
 }
 
-.notes-flex-container {
-  /* display: flex; */
-  /* align-content: space-between; */
-  /* flex-wrap: wrap; */
-  /* flex-direction: row; */
-}
-
 .note-entry {
   background-color: #fff;
   width: 250px;
@@ -45,9 +38,10 @@
 }
 
 .form-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 100px;
+  display: grid;
+  margin: 0 auto;
+  margin-bottom: 80px;
+  width: 40vw;
 }
 
 .form-backdrop {
@@ -66,18 +60,17 @@
   border: 1px solid lightgray;
   border-radius: 10px;
   box-shadow: 2px 2px lightgray;
-  flex-grow: 0.1;
+  /* flex-grow: 0.2; */
 }
 
 .input-wrapper {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
+  margin: 10px 10px;
+  display: grid;
 }
 
 .input-wrapper input {
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: bolder;
   margin-bottom: 15px;
   border: none;
 }
@@ -87,7 +80,6 @@
   font-size: 1rem;
   resize: none;
   border: none;
-  /* width: 100%; */
 }
 
 .input-wrapper input:focus, textarea:focus {
@@ -99,9 +91,11 @@
 }
 
 .input-wrapper input:nth-of-type(2) {
+  display: grid;
+  justify-self: center;
   position: relative;
-  left: 11rem;
-  top: 3rem;
+  /* left: 10rem; */
+  top: 3.5rem;
   background-color: lightgreen;
   border: 1px solid lightgreen;
   /* box-shadow: 1px 1px lightseagreen; */

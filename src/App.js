@@ -190,7 +190,7 @@ class App extends React.Component {
     this.setState({
       [name]: value,
       textareaRow: value.length === 0 ? "1" : "6",
-      submitBtn: "submit"
+      submitBtn: value.length === 0 ? "hidden" : "submit"
     });
   }
 

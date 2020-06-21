@@ -267,7 +267,7 @@ class App extends React.Component {
           </Route>
           <Route path="/">
             <header>
-              <Link to="/signin">Paper</Link>
+              <Link to="/">Paper</Link>
             </header>
             <div className="form-wrapper">
               <div 

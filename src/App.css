@@ -167,29 +167,6 @@ header a {
   }
 }
 
-@media only screen and (max-width:900px) {
-  .App h1 {
-    margin-left: 30px;
-  }
-  
-  .notes-grid-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-gap: 10px;
-    width: 90%;
-    margin: 0 auto;
-    justify-items: center;
-  }
-
-  .form-wrapper {
-    display: grid;
-    margin: 30px auto;
-    margin-bottom: 60px;
-    width: 80vw;
-  }
-}
-
 .editor-wrapper {
   display: grid;
   place-items: center;
@@ -238,4 +215,36 @@ header a {
   width: fit-content;
   justify-self: end;
   margin-bottom: 0;
+}
+
+
+@media only screen and (max-width:900px) {
+  .App h1 {
+    margin-left: 30px;
+  }
+  
+  .notes-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+    width: 90%;
+    margin: 0 auto;
+    justify-items: center;
+  }
+
+  .form-wrapper {
+    display: grid;
+    margin: 30px auto;
+    margin-bottom: 60px;
+    width: 80vw;
+  }
+  
+  .editor {
+    width: 90vw;
+  }
+
+  .form {
+    box-shadow: none;
+  }
 }

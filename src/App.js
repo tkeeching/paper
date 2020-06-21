@@ -25,7 +25,7 @@ function Note(props) {
 }
 
 function Notes(props) {
-  console.log('displaying notes... ', props.notes)
+  // console.log('displaying notes... ', props.notes)
   // console.log(props.notes[0]?.dateCreated)
   // console.log(props.notes[0]?.dateCreated.seconds)
 
@@ -168,6 +168,7 @@ class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     if (!this.state.body) return
+    console.log('submitting note...');
 
     if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID)
     else this.newNote();
@@ -175,9 +176,11 @@ class App extends React.Component {
     this.setState({
       title: '',
       body: '',
-      currentNoteID: ''
+      currentNoteID: '',
+      editMode: false
     })
     this.hideTitleField();
+    this.hideEditor(e);
   }
 
   handleInputChange = e => {
@@ -223,19 +226,21 @@ class App extends React.Component {
   }
 
   hideEditor = e => {
-    if (e.target.name === "body" || e.target.name === "title") return;
+    if (e.target.name === "body" || e.target.name === "title" || e.target.name === "editor-submit") return;
+    console.log('hiding editor...')
     this.setState({
-      editMode: false,
       titleField: "hidden",
+      editorWrapper: "hidden",
+      editor: "hidden",
+      editMode: false,
       title: '',
       body: '',
-      editorWrapper: "hidden",
-      editor: "hidden"
+      currentNoteID: '',
     })
   }
 
   render() {
-    console.log(this.currentUserID);
+    // console.log(this.currentUserID);
 
     // Configure FirebaseUI
     const uiConfig = {
@@ -320,7 +325,7 @@ class App extends React.Component {
                       </textarea>
                       <div className="editor-btn-wrapper">
                         {this.state.currentNoteID && <input className="editor-delete-btn" type="button" value="Delete" onClick={this.handleDelete} />}
-                        <input className="editor-done-btn" type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
+                        <input className="editor-done-btn" name="editor-submit" type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
                       </div>
                     </div>
                   </form>

@@ -167,7 +167,7 @@ class App extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.body) return
+    if (!this.state.body && !this.state.title) return
     console.log('submitting note...');
 
     if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID)

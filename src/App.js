@@ -51,8 +51,13 @@ class App extends React.Component {
     title: '',
     body: '',
     titleField: "hidden",
-    editor: "hidden",
     textareaRow: 1,
+    submitBtn: "hidden",
+    editMode: false,
+    editorWrapper: "hidden",
+    editor: "hidden",
+    editorTitle: '',
+    editorBody: '',
     currentNoteID: '',
     currentUserID: '',
     notes: []
@@ -121,9 +126,12 @@ class App extends React.Component {
     const note = this.state.notes.find(note => note.id === noteID);
     if (!note) return
     this.setState({
+      titleField: note.title ? "text" : "hidden",
       title: note.title,
       body: note.body,
       currentNoteID: noteID,
+      editMode: true,
+      editorWrapper: "editor-wrapper",
       editor: "editor"
     })
 
@@ -143,6 +151,7 @@ class App extends React.Component {
       currentNoteID: '',
       editor: "hidden"
     })
+    this.hideTitleField();
   }
 
   handleDelete = () => {
@@ -153,6 +162,7 @@ class App extends React.Component {
       body: '',
       currentNoteID: ''
     })
+    this.hideTitleField();
   }
 
   handleSubmit = e => {
@@ -167,6 +177,7 @@ class App extends React.Component {
       body: '',
       currentNoteID: ''
     })
+    this.hideTitleField();
   }
 
   handleInputChange = e => {
@@ -175,7 +186,8 @@ class App extends React.Component {
 
     this.setState({
       [name]: value,
-      textareaRow: 6
+      textareaRow: value.length === 0 ? "1" : "6",
+      submitBtn: "submit"
     });
   }
 
@@ -188,12 +200,11 @@ class App extends React.Component {
   }
 
   hideTitleField = e => {
-    console.log(e.target);
-    // if (e.target.id === "textarea") return;
     console.log("hide");
     this.setState({
       titleField: "hidden",
-      textareaRow: 1
+      textareaRow: 1,
+      submitBtn: "hidden"
     })
   }
 
@@ -209,6 +220,18 @@ class App extends React.Component {
       const errorMessage = error.message;
       // ...
     });
+  }
+
+  hideEditor = e => {
+    if (e.target.name === "body" || e.target.name === "title") return;
+    this.setState({
+      editMode: false,
+      titleField: "hidden",
+      title: '',
+      body: '',
+      editorWrapper: "hidden",
+      editor: "hidden"
+    })
   }
 
   render() {
@@ -230,17 +253,17 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <h1>Paper</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/signin">Sign In</Link>
-        </nav>
         <Switch>
           <Route path="/signin">
-            <h2>Please sign in to continue</h2>
+            <header>
+              <Link to="/">Paper</Link>
+            </header>
             <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
           </Route>
           <Route path="/">
+            <header>
+              <Link to="/signin">Paper</Link>
+            </header>
             <div className="form-wrapper">
               <div 
                 className="form-backdrop"
@@ -252,53 +275,56 @@ class App extends React.Component {
                 onClick={this.showTitleField}>
                 <div className="input-wrapper">
                   <input
-                    type={this.state.titleField}
+                    type={!this.state.editMode ? this.state.titleField : "hidden"}
                     name="title"
-                    value={this.state.title}
+                    value={!this.state.editMode ? this.state.title : ''}
                     onChange={this.handleInputChange}
                     placeholder="Title" />
                   <textarea
                     name="body"
-                    value={this.state.body}
+                    value={!this.state.editMode ? this.state.body : ''}
                     onChange={this.handleInputChange}
                     id="textarea"
-                    // cols="30"
                     rows={this.state.textareaRow}
                     placeholder="Take a note...">
                   </textarea>
-                  <input type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
-                  {this.state.currentNoteID && <input type="button" value="Cancel" onClick={this.handleCancel} />}
-                  {this.state.currentNoteID && <input type="button" value="Delete" onClick={this.handleDelete} />}
+                </div>
+                <div className="input-btn-wrapper">
+                  <input type={this.state.submitBtn} value="+"/>
                 </div>
               </form>
             </div>
             <div className="notes-grid-container">
               <Notes className="notes-flex-container" notes={this.state.notes} onClick={this.editNote} />
-              <div className={this.state.editor}>
-                <form 
-                  className="form" 
-                  onSubmit={this.handleSubmit}>
-                  <div className="input-wrapper">
-                    <input
-                      type={this.state.titleField}
-                      name="title"
-                      value={this.state.title}
-                      onChange={this.handleInputChange}
-                      placeholder="Title" />
-                    <textarea
-                      name="body"
-                      value={this.state.body}
-                      onChange={this.handleInputChange}
-                      id="textarea"
-                      // cols="30"
-                      rows="6"
-                      placeholder="Take a note...">
-                    </textarea>
-                    <input type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
-                    {this.state.currentNoteID && <input type="button" value="Cancel" onClick={this.handleCancel} />}
-                    {this.state.currentNoteID && <input type="button" value="Delete" onClick={this.handleDelete} />}
-                  </div>
-                </form>
+              <div 
+                className={this.state.editorWrapper}
+                onClick={this.hideEditor}>
+                <div className={this.state.editor}>
+                  <form 
+                    className="form" 
+                    onSubmit={this.handleSubmit}>
+                    <div className="input-wrapper">
+                      <input
+                        type={this.state.titleField}
+                        name="title"
+                        value={this.state.editMode ? this.state.title : ''}
+                        onChange={this.handleInputChange}
+                        placeholder="Title" />
+                      <textarea
+                        name="body"
+                        value={this.state.editMode ? this.state.body : ''}
+                        onChange={this.handleInputChange}
+                        id="textarea"
+                        rows="6"
+                        placeholder="Take a note...">
+                      </textarea>
+                      <div className="editor-btn-wrapper">
+                        {this.state.currentNoteID && <input className="editor-delete-btn" type="button" value="Delete" onClick={this.handleDelete} />}
+                        <input className="editor-done-btn" type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
+                      </div>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </Route>

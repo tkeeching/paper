@@ -36,8 +36,7 @@ header a {
 }
 
 .note-entry:hover {
-  box-shadow: 0 1px 1px 1px lightgray;
-  /* animation: running-light 0.6s infinite; */
+  box-shadow: 0 1px 1px 1px rgba(211, 211, 211, 0.5);
 }
 
 .note-entry:focus {

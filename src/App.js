@@ -130,7 +130,7 @@ class App extends React.Component {
     e.preventDefault();
     if (!this.state.body && !this.state.title) return;
 
-    if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID)
+    if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID);
     else this.newNote();
 
     this.setState({

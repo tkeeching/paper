@@ -1,3 +1,19 @@
+## Paper
+
+A simple note-taking app built with React and Firebase.
+
+Try it [HERE](https://paper-1fe4c.web.app/)
+
+<a href="https://paper-1fe4c.web.app/" target="_blank">
+  <img src="./screenshot.png" alt="screenshot">
+</a>
+
+## Functionality
+
+User can create, edit and delete notes.
+
+## 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

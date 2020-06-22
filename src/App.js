@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 import firebase from 'firebase';
+import Note from './components/Note/Note';
+import CreateNote from './components/CreateNote/CreateNote';
+import Editor from './components/Editor/Editor';
 import Masonry from 'react-masonry-component';
 import * as firebaseui from 'firebaseui';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -9,42 +12,6 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-
-function Note(props) {
-  const { id, onClick, title, body } = props;
-
-  return (
-    <div
-      key={id}
-      className="note-entry"
-      onClick={() => onClick(id)}>
-      <h3>{title}</h3>
-      <p>{body}</p>
-    </div>
-  )
-}
-
-function Notes(props) {
-  // console.log('displaying notes... ', props.notes)
-  // console.log(props.notes[0]?.dateCreated)
-  // console.log(props.notes[0]?.dateCreated.seconds)
-
-  return (
-    <Masonry
-      options={{
-          gutter: 20,
-          fitWidth: true
-        }}
-    >
-      {
-        props.notes
-          .map(note => (
-            <Note className="note-entry" key={note.id} id={note.id} onClick={props.onClick} title={note.title} body={note.body} />
-          ))
-      }
-    </Masonry>
-  )
-}
 
 class App extends React.Component {
   state = {
@@ -83,23 +50,23 @@ class App extends React.Component {
     firebase
       .auth()
       .onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in.
-        const isAnonymous = user.isAnonymous;
-        const uid = user.uid;
-        console.log('signed in as :', uid);
+        if (user) {
+          // User is signed in.
+          const isAnonymous = user.isAnonymous;
+          const uid = user.uid;
+          console.log('signed in anonymously as :', uid);
 
-        this.setState({
-          currentUserID: uid
-        })
+          this.setState({
+            currentUserID: uid
+          })
+          // ...
+        } else {
+          // User is signed out.
+          // ...
+          console.log('signed out')
+        }
         // ...
-      } else {
-        // User is signed out.
-        // ...
-        console.log('signed out')
-      }
-      // ...
-    });
+      });
   }
 
   newNote = () => {
@@ -109,22 +76,14 @@ class App extends React.Component {
       dateCreated: firebase.firestore.FieldValue.serverTimestamp()
     }
     const setDoc = firebase.firestore().collection('notes').add(data).then(ref => {
-      console.log('Added document with ID: ', ref.id);
     });
-  }
-
-  updateNote = noteID => {
-    const data = {
-      title: this.state.title,
-      body: this.state.body,
-      dateModified: firebase.firestore.FieldValue.serverTimestamp()
-    }
-    const setDoc = firebase.firestore().collection('notes').doc(noteID).set(data, { merge: true })
   }
 
   editNote = noteID => {
     const note = this.state.notes.find(note => note.id === noteID);
+
     if (!note) return
+
     this.setState({
       titleField: note.title ? "text" : "hidden",
       title: note.title,
@@ -134,14 +93,15 @@ class App extends React.Component {
       editorWrapper: "editor-wrapper",
       editor: "editor"
     })
+  }
 
-    // firebase.firestore().collection('notes').doc(noteID).set(
-    //   {
-    //     title: this.state.title,
-    //     body: this.state.body,
-    //     dateCreated: firebase.firestore.FieldValue.serverTimestamp()
-    //   }
-    // );
+  updateNote = noteID => {
+    const data = {
+      title: this.state.title,
+      body: this.state.body,
+      dateModified: firebase.firestore.FieldValue.serverTimestamp()
+    }
+    const setDoc = firebase.firestore().collection('notes').doc(noteID).set(data, { merge: true })
   }
 
   handleCancel = () => {
@@ -156,6 +116,7 @@ class App extends React.Component {
 
   handleDelete = () => {
     if (!this.state.currentNoteID) return
+
     firebase.firestore().collection('notes').doc(this.state.currentNoteID).delete();
     this.setState({
       title: '',
@@ -168,7 +129,6 @@ class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     if (!this.state.body && !this.state.title) return
-    console.log('submitting note...');
 
     if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID)
     else this.newNote();
@@ -189,21 +149,20 @@ class App extends React.Component {
 
     this.setState({
       [name]: value,
-      textareaRow: value.length === 0 ? "1" : "6",
-      submitBtn: value.length === 0 ? "hidden" : "submit"
+      textareaRow: this.state.editMode || value.length === 0 ? "1" : "6",
+      submitBtn: this.state.editMode || value.length === 0 ? "hidden" : "submit"
     });
   }
 
   showTitleField = () => {
     if (this.state.titleField === "text") return;
-    console.log("show");
+
     this.setState({
       titleField: "text"
     })
   }
 
   hideTitleField = e => {
-    console.log("hide");
     this.setState({
       titleField: "hidden",
       textareaRow: 1,
@@ -212,22 +171,20 @@ class App extends React.Component {
   }
 
   handleSignIn = () => {
-    console.log('signing in...');
-
     firebase
       .auth()
       .signInAnonymously()
       .catch(error => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ...
-    });
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ...
+      });
   }
 
   hideEditor = e => {
     if (e.target.name === "body" || e.target.name === "title" || e.target.name === "editor-submit") return;
-    console.log('hiding editor...')
+
     this.setState({
       titleField: "hidden",
       editorWrapper: "hidden",
@@ -240,8 +197,6 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log(this.currentUserID);
-
     // Configure FirebaseUI
     const uiConfig = {
       // Popup signin flow rather than redirect flow.
@@ -256,6 +211,19 @@ class App extends React.Component {
       ]
     };
 
+    const {
+      editMode,
+      titleField,
+      title,
+      body,
+      textareaRow,
+      submitBtn,
+      editorWrapper,
+      editor,
+      notes,
+      currentNoteID
+    } = this.state;
+
     return (
       <div className="App">
         <Switch>
@@ -269,75 +237,49 @@ class App extends React.Component {
             <header>
               <Link to="/">Paper</Link>
             </header>
-            <div className="form-wrapper">
-              <div 
-                className="form-backdrop"
-                onClick={this.hideTitleField}>
-              </div>
-              <form 
-                className="form" 
-                onSubmit={this.handleSubmit}
-                onClick={this.showTitleField}>
-                <div className="input-wrapper">
-                  <input
-                    type={!this.state.editMode ? this.state.titleField : "hidden"}
-                    name="title"
-                    value={!this.state.editMode ? this.state.title : ''}
-                    onChange={this.handleInputChange}
-                    placeholder="Title" />
-                  <textarea
-                    name="body"
-                    value={!this.state.editMode ? this.state.body : ''}
-                    onChange={this.handleInputChange}
-                    id="textarea"
-                    rows={this.state.textareaRow}
-                    placeholder="Take a note...">
-                  </textarea>
-                </div>
-                <div className="input-btn-wrapper">
-                  <input type={this.state.submitBtn} value="+"/>
-                </div>
-              </form>
-            </div>
+            <CreateNote
+              hideTitleField={this.hideTitleField}
+              handleSubmit={this.handleSubmit}
+              showTitleField={this.showTitleField}
+              handleInputChange={this.handleInputChange}
+              editMode={editMode}
+              titleField={titleField}
+              title={title}
+              body={body}
+              textareaRow={textareaRow}
+              submitBtn={submitBtn} />
             <div className="notes-grid-container">
-              <Notes className="notes-flex-container" notes={this.state.notes} onClick={this.editNote} />
-              <div 
-                className={this.state.editorWrapper}
-                onClick={this.hideEditor}>
-                <div className={this.state.editor}>
-                  <form 
-                    className="form" 
-                    onSubmit={this.handleSubmit}>
-                    <div className="input-wrapper">
-                      <input
-                        type={this.state.titleField}
-                        name="title"
-                        value={this.state.editMode ? this.state.title : ''}
-                        onChange={this.handleInputChange}
-                        placeholder="Title" />
-                      <textarea
-                        name="body"
-                        value={this.state.editMode ? this.state.body : ''}
-                        onChange={this.handleInputChange}
-                        id="textarea"
-                        rows="6"
-                        placeholder="Take a note...">
-                      </textarea>
-                      <div className="editor-btn-wrapper">
-                        {this.state.currentNoteID && <input className="editor-delete-btn" type="button" value="Delete" onClick={this.handleDelete} />}
-                        <input className="editor-done-btn" name="editor-submit" type="submit" value={this.state.currentNoteID ? "Done" : "+"} />
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              <Masonry
+                options={{
+                  gutter: 20,
+                  fitWidth: true
+                }}
+              >
+                {
+                  notes
+                    .map(note => (
+                      <Note className="note-entry" key={note.id} id={note.id} onClick={this.editNote} title={note.title} body={note.body} />
+                    ))
+                }
+              </Masonry>
+              <Editor
+                handleSubmit={this.handleSubmit}
+                handleInputChange={this.handleInputChange}
+                handleDelete={this.handleDelete}
+                hideEditor={this.hideEditor}
+                editorWrapper={editorWrapper}
+                editor={editor}
+                titleField={titleField}
+                title={title}
+                body={body}
+                editMode={editMode}
+                currentNoteID={currentNoteID} />
             </div>
           </Route>
         </Switch>
       </div>
     );
   }
-
 }
 
 export default App;

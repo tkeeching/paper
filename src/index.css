@@ -7,10 +7,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: linen;
-  /* background: url('./tiles.jpg');
-  background-size: cover;
-  background-attachment: fixed; */
+  background-color: rgba(250, 240, 230, 0.6);
 }
 
 code {
@@ -19,7 +16,4 @@ code {
 }
 
 @media only screen and (max-width: 900px) {
-  body {
-    /* background-size: 100vh 100%; */
-  }
 }

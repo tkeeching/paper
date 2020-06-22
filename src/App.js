@@ -82,7 +82,7 @@ class App extends React.Component {
   editNote = noteID => {
     const note = this.state.notes.find(note => note.id === noteID);
 
-    if (!note) return
+    if (!note) return;
 
     this.setState({
       titleField: note.title ? "text" : "hidden",
@@ -115,7 +115,7 @@ class App extends React.Component {
   }
 
   handleDelete = () => {
-    if (!this.state.currentNoteID) return
+    if (!this.state.currentNoteID) return;
 
     firebase.firestore().collection('notes').doc(this.state.currentNoteID).delete();
     this.setState({
@@ -128,7 +128,7 @@ class App extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.body && !this.state.title) return
+    if (!this.state.body && !this.state.title) return;
 
     if (this.state.currentNoteID) this.updateNote(this.state.currentNoteID)
     else this.newNote();
@@ -199,11 +199,8 @@ class App extends React.Component {
   render() {
     // Configure FirebaseUI
     const uiConfig = {
-      // Popup signin flow rather than redirect flow.
       signInFlow: 'popup',
-      // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
       signInSuccessUrl: '/',
-      // We will display Google and Facebook as auth providers.
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.FacebookAuthProvider.PROVIDER_ID,

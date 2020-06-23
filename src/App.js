@@ -75,8 +75,7 @@ class App extends React.Component {
       body: this.state.body,
       dateCreated: firebase.firestore.FieldValue.serverTimestamp()
     }
-    const setDoc = firebase.firestore().collection('notes').add(data).then(ref => {
-    });
+    const setDoc = firebase.firestore().collection('notes').add(data);
   }
 
   editNote = noteID => {
@@ -85,7 +84,7 @@ class App extends React.Component {
     if (!note) return;
 
     this.setState({
-      titleField: note.title ? "text" : "hidden",
+      titleField: "text",
       title: note.title,
       body: note.body,
       currentNoteID: noteID,
